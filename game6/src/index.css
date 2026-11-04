@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Fredoka", ui-rounded, "Nunito", "Segoe UI", system-ui, sans-serif;
+  --color-ink: #1f2430;
+  --color-cream: #fff8e7;
+  --color-sun: #ffd23f;
+  --color-coral: #ff6b6b;
+  --color-teal: #3fc1c9;
+  --color-ocean: #4d9de0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #bfe3f2;
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+}
+
+.panel-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #1f243055 transparent;
+}
+.panel-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.panel-scroll::-webkit-scrollbar-thumb {
+  background: #1f243040;
+  border-radius: 99px;
+}
+
+@keyframes pop-in {
+  0% {
+    transform: translate(-50%, -12px) scale(0.92);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0) scale(1);
+    opacity: 1;
+  }
+}
+.toast-pop {
+  animation: pop-in 0.22s ease-out;
+}
+
+@keyframes wobble {
+  0%,
+  100% {
+    transform: rotate(-4deg) scale(1);
+  }
+  50% {
+    transform: rotate(4deg) scale(1.06);
+  }
+}
+.wobble {
+  animation: wobble 1.6s ease-in-out infinite;
+}
+
+/* ---------- Bowling HUD ---------- */
+.bowl-text {
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 3px #1f2430;
+  filter: drop-shadow(0 6px 0 #1f2430) drop-shadow(0 0 22px rgba(255, 255, 255, 0.35));
+}
+@keyframes bowl-pop {
+  0% { transform: scale(0.2) rotate(-14deg); opacity: 0; }
+  45% { transform: scale(1.18) rotate(4deg); opacity: 1; }
+  62% { transform: scale(0.94) rotate(-2deg); }
+  78% { transform: scale(1.04) rotate(1deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+.bowl-pop {
+  animation: bowl-pop 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.2) both, wobble 1.6s ease-in-out 0.6s infinite;
+}
+@keyframes bowl-sub {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.bowl-sub {
+  animation: bowl-sub 0.35s ease-out 0.25s both;
+}
+.bowl-range {
+  width: 100%;
+  height: 18px;
+  cursor: pointer;
+}

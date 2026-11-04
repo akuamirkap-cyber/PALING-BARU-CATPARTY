@@ -1,0 +1,266 @@
+@import "tailwindcss";
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  min-height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  font-family: "Nunito", "Baloo 2", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.font-display {
+  font-family: "Lilita One", "Nunito", system-ui, sans-serif;
+  letter-spacing: 0.02em;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ---------------- juicy 2D menu UI ---------------- */
+.juicy {
+  border: 3px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0 6px 0 var(--edge),
+    0 12px 18px rgba(30, 50, 90, 0.18),
+    inset 0 2px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -5px 0 rgba(0, 0, 0, 0.1);
+  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.15s ease;
+}
+.juicy::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 48%);
+  pointer-events: none;
+}
+.juicy:active {
+  transform: translateY(4px) scale(0.985);
+  box-shadow:
+    0 2px 0 var(--edge),
+    0 4px 8px rgba(30, 50, 90, 0.16),
+    inset 0 2px 0 rgba(255, 255, 255, 0.5);
+}
+.press {
+  transition: transform 0.09s ease, box-shadow 0.09s ease, filter 0.15s ease;
+}
+.press:active {
+  transform: translateY(3px) scale(0.96);
+  filter: brightness(1.04);
+}
+@keyframes sparkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.7) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.2) rotate(25deg); }
+}
+.sparkle { animation: sparkle 2.8s ease-in-out infinite; text-shadow: 0 0 10px #fff; }
+@keyframes sheetUp {
+  from { transform: translateY(30px) scale(0.98); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.sheet { animation: sheetUp 0.26s cubic-bezier(0.2, 0.9, 0.3, 1.25); }
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+.floaty { animation: floaty 3.6s ease-in-out infinite; }
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+.wiggle { animation: wiggle 3s ease-in-out infinite; }
+.sticker {
+  font-family: "Lilita One", "Nunito", sans-serif;
+  -webkit-text-stroke: 2px #7a4a06;
+  paint-order: stroke fill;
+  text-shadow:
+    0 4px 0 #7a4a06,
+    0 8px 14px rgba(60, 30, 0, 0.25);
+}
+@media (min-width: 640px) {
+  .sticker {
+    -webkit-text-stroke: 3px #7a4a06;
+    text-shadow:
+      0 5px 0 #7a4a06,
+      0 9px 16px rgba(60, 30, 0, 0.22);
+  }
+}
+.nice-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+.nice-scroll::-webkit-scrollbar-thumb { background: #ffc86b; border-radius: 99px; }
+.nice-scroll::-webkit-scrollbar-track { background: #ffedd0; border-radius: 99px; }
+.no-sb::-webkit-scrollbar { display: none; }
+.no-sb { scrollbar-width: none; }
+
+/* ---------------- menu party decorations ---------------- */
+@keyframes drift {
+  0% { transform: translateX(-14px); }
+  50% { transform: translateX(14px); }
+  100% { transform: translateX(-14px); }
+}
+.cloud-drift { animation: drift 9s ease-in-out infinite; }
+.cloud-drift-slow { animation: drift 14s ease-in-out infinite; }
+@keyframes sunspin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.sun-rays {
+  background: repeating-conic-gradient(from 0deg, rgba(255, 236, 150, 0.85) 0deg 10deg, rgba(255, 236, 150, 0) 10deg 24deg);
+  animation: sunspin 26s linear infinite;
+}
+@keyframes cardPop {
+  0% { transform: scale(0.55); opacity: 0; }
+  60% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.card-pop { animation: cardPop 0.38s cubic-bezier(0.2, 0.9, 0.3, 1.3) both; }
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.45; transform: translateX(-50%) scale(1); }
+  50% { opacity: 0.75; transform: translateX(-50%) scale(1.08); }
+}
+.spot-glow { animation: glowPulse 3.2s ease-in-out infinite; }
+@keyframes shineSweep {
+  0% { transform: translateX(-130%) skewX(-18deg); }
+  55%, 100% { transform: translateX(240%) skewX(-18deg); }
+}
+.juicy-shine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 45%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.65) 50%, rgba(255, 255, 255, 0) 100%);
+  animation: shineSweep 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes idleBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+.idle-bounce { animation: idleBounce 2.2s ease-in-out infinite; }
+.juicy.idle-bounce:active { animation: none; }
+@keyframes buntingSway {
+  0%, 100% { transform: rotate(-2.5deg); }
+  50% { transform: rotate(2.5deg); }
+}
+.bunting { transform-origin: top center; animation: buntingSway 4s ease-in-out infinite; }
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.55; }
+}
+.dot-pulse { animation: dotPulse 1.8s ease-in-out infinite; }
+.floor-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.55) 2.2px, transparent 2.2px);
+  background-size: 26px 26px;
+}
+
+/* ---------------- mobile menu juice ---------------- */
+@keyframes heroPop {
+  0% { transform: scale(0.7) translateY(14px); opacity: 0; }
+  55% { transform: scale(1.06) translateY(-2px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+.hero-pop { animation: heroPop 0.42s cubic-bezier(0.2, 0.9, 0.3, 1.25) both; }
+@keyframes tabSlide {
+  from { transform: translateY(10px) scale(0.96); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.tab-slide { animation: tabSlide 0.25s ease-out both; }
+@keyframes beamSway {
+  0%, 100% { transform: translateX(-50%) rotate(-4deg); opacity: 0.55; }
+  50% { transform: translateX(-50%) rotate(4deg); opacity: 0.85; }
+}
+.stage-beam {
+  animation: beamSway 5s ease-in-out infinite;
+  transform-origin: top center;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.12) 70%, transparent 100%);
+  clip-path: polygon(38% 0, 62% 0, 92% 100%, 8% 100%);
+}
+@keyframes podiumGlow {
+  0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+  50% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+}
+.podium-glow { animation: podiumGlow 2.6s ease-in-out infinite; }
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+  50% { transform: translateY(-10px) rotate(var(--rot, 0deg)); }
+}
+.float-slow { animation: floatSlow 4.5s ease-in-out infinite; }
+@keyframes marqueeX {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.tips-marquee {
+  animation: marqueeX 18s linear infinite;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(120px) rotate(320deg); opacity: 0; }
+}
+.confetti-bit {
+  animation: confettiFall 1s ease-in forwards;
+}
+@keyframes ringPulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 210, 63, 0.7); }
+  70% { box-shadow: 0 0 0 12px rgba(255, 210, 63, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 210, 63, 0); }
+}
+.ring-pulse { animation: ringPulse 1.8s ease-out infinite; }
+@keyframes arrowNudgeL {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-4px); }
+}
+@keyframes arrowNudgeR {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+.arrow-l { animation: arrowNudgeL 1.6s ease-in-out infinite; }
+.arrow-r { animation: arrowNudgeR 1.6s ease-in-out infinite; }
+/* snap carousel for cats */
+.snap-row {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.snap-row > * {
+  scroll-snap-align: center;
+}
+/* chunky segmented tabs */
+.seg-tab {
+  transition: transform 0.12s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.12s ease;
+}
+.seg-tab:active {
+  transform: scale(0.93);
+}
+/* pressable cards get a springy squash */
+.press-card {
+  transition: transform 0.12s cubic-bezier(0.2, 0.9, 0.3, 1.4), box-shadow 0.12s ease, filter 0.12s ease;
+}
+.press-card:active {
+  transform: translateY(3px) scale(0.94);
+  filter: brightness(1.06);
+}

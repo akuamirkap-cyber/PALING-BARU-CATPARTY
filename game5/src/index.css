@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+@import "tailwindcss";
+@keyframes bob{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,-58%)}}
+@keyframes fade{from{opacity:0;transform:scale(.95)}to{opacity:1}}
+body{margin:0}
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
+@keyframes irisIn{from{clip-path:circle(0% at 50% 50%)}to{clip-path:circle(75% at 50% 50%)}}
+@keyframes irisOut{0%,30%{clip-path:circle(75% at 50% 50%)}to{clip-path:circle(0% at 50% 50%)}}
+@keyframes hop{from{transform:translateY(0) scale(1.1,.9)}to{transform:translateY(-30px) scale(.95,1.05)}}
+@keyframes dropIn{from{transform:translateY(-120%)}to{transform:translateY(0)}}
+@keyframes riseIn{from{transform:translateY(140%);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes popIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes countPop{0%{transform:scale(2.2);opacity:0}25%{transform:scale(1);opacity:1}80%{opacity:1}100%{transform:scale(.8);opacity:0}}
+@keyframes feedIn{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes cardIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes barIn{from{transform:scaleX(0)}to{transform:scaleX(1.02)}}
+@keyframes barOut{from{transform:scaleX(1.02)}to{transform:scaleX(0)}}
+@keyframes dotsPan{from{background-position:0 0}to{background-position:72px 36px}}
+@keyframes badgeIn{from{transform:scale(.3) rotate(-12deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes badgeOut{to{transform:scale(.4) translateY(30px);opacity:0}}
+@keyframes letterPop{from{transform:translateY(24px) scale(.4);opacity:0}to{transform:none;opacity:1}}
+@keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+@keyframes slideL{from{transform:translateX(-60px);opacity:0}to{transform:none;opacity:1}}
+@keyframes slideR{from{transform:translateX(60px);opacity:0}to{transform:none;opacity:1}}
+@keyframes slideD{from{transform:translateY(-40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes slideU{from{transform:translateY(50px);opacity:0}to{transform:none;opacity:1}}
+@keyframes panelIn{from{transform:translateX(110%) rotate(4deg)}to{transform:none}}
+@keyframes tileIn{from{transform:scale(.6) translateY(10px);opacity:0}to{transform:none;opacity:1}}
+@keyframes jelly{0%{transform:scale(1)}30%{transform:scale(1.18,.85)}50%{transform:scale(.9,1.1)}70%{transform:scale(1.05,.97)}100%{transform:scale(1)}}
+@keyframes shine{from{transform:translateX(-120%) skewX(-20deg)}to{transform:translateX(220%) skewX(-20deg)}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes ringDash{from{stroke-dashoffset:var(--from)}to{stroke-dashoffset:var(--to)}}
+@keyframes readyGlow{0%,100%{box-shadow:0 8px 0 #b45309,0 0 0 0 rgba(255,200,40,.6)}50%{box-shadow:0 8px 0 #b45309,0 0 0 14px rgba(255,200,40,0)}}
+.j-shine{position:relative;overflow:hidden}
+.j-shine::after{content:"";position:absolute;inset:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:shine 2.8s ease-in-out infinite}

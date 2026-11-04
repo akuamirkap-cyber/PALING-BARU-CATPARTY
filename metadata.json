@@ -1,0 +1,6 @@
+{
+  "name": "Meow Brawl Dual Comparator",
+  "description": "Perbandingan 2 versi gameplay fisika Animal Party (Meow Brawl) secara berdampingan atas-bawah dan side-by-side.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
