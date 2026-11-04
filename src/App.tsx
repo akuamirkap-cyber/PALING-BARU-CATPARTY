@@ -33,6 +33,15 @@ export default function App() {
   const [twoPlayer, setTwoPlayer] = useState(false);
   const [bots, setBots] = useState(5);
   const [mode, setMode] = useState<"brawl" | "bomb" | "teams">("brawl");
+  const [arena, setArena] = useState<"plane" | "ship">(() => (localStorage.getItem("mb.arena") === "ship" ? "ship" : "plane"));
+  const [shipScale, setShipScale] = useState<number>(() => {
+    const v = parseFloat(localStorage.getItem("mb.shipScale") ?? "0.4");
+    return [0.4, 1.6, 2.8].includes(v) ? v : 0.4;
+  });
+  useEffect(() => {
+    localStorage.setItem("mb.arena", arena);
+    localStorage.setItem("mb.shipScale", String(shipScale));
+  }, [arena, shipScale]);
   const matchBots = mode === "teams" ? (twoPlayer ? 8 : 9) : bots;
   const [camMode, setCamMode] = useState<"stumble" | "gang">(() => (localStorage.getItem("mb.camMode") === "stumble" ? "stumble" : "gang"));
   const [camZoom, setCamZoom] = useState<number>(() => {
@@ -120,7 +129,7 @@ export default function App() {
         <ErrorBoundary key="arena" label="arena" onReset={() => go("menu")}>
         <GameView
           key={gameKey}
-          options={{ p1Animal: p1, p2Animal: p2, twoPlayer, bots: matchBots, p1Acc: acc1, p2Acc: acc2, p1Eyes: eyes, p1Expression: expression, mode, camMode, camZoom }}
+          options={{ p1Animal: p1, p2Animal: p2, twoPlayer, bots: matchBots, p1Acc: acc1, p2Acc: acc2, p1Eyes: eyes, p1Expression: expression, mode, camMode, camZoom, arena, shipScale }}
           showTouch={showTouch && !twoPlayer}
           onExit={() => go("menu")}
         />
@@ -150,6 +159,10 @@ export default function App() {
             eyeStyle={eyes}
             expression={expression}
             mode={mode}
+            arena={arena}
+            onArena={setArena}
+            shipScale={shipScale}
+            onShipScale={setShipScale}
             bots={matchBots}
             twoPlayer={twoPlayer}
             active={sheet === null}

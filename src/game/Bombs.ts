@@ -1,7 +1,7 @@
 import * as CANNON from "cannon-es";
 import * as THREE from "three";
 import type { Character } from "./Character";
-import type { Arena } from "./Arena";
+import type { ArenaLike } from "./ShipArena";
 import { sfx } from "./audio";
 
 export const BOMB_R = 0.34;
@@ -167,7 +167,7 @@ export class BombManager {
 
   spawn(initial = false) {
     // random safe landing spot
-    const arena = (this as unknown as { arenaRef?: Arena }).arenaRef;
+    const arena = (this as unknown as { arenaRef?: ArenaLike }).arenaRef;
     let x = 0;
     let z = 0;
     for (let tries = 0; tries < 12; tries++) {
@@ -214,8 +214,8 @@ export class BombManager {
     }
   }
 
-  update(dt: number, playing: boolean, chars: Character[], arena: Arena) {
-    (this as unknown as { arenaRef?: Arena }).arenaRef = arena;
+  update(dt: number, playing: boolean, chars: Character[], arena: ArenaLike) {
+    (this as unknown as { arenaRef?: ArenaLike }).arenaRef = arena;
     this.time += dt;
     const time = this.time;
     // track holders (for kill credit + hot-potato risk)

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Bomb, Cat, CircleHelp, Eye, Gamepad2, PawPrint, Settings2, Shirt, SlidersHorizontal, Sparkles, Swords, UsersRound } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bomb, Cat, CircleHelp, Eye, Gamepad2, PawPrint, Plane, Settings2, Ship, Shirt, SlidersHorizontal, Sparkles, Swords, UsersRound } from "lucide-react";
 import AssetCatPreview from "./AssetCatPreview";
 import LineupPreview from "./LineupPreview";
 import { animalById, type AccessoryId, type AnimalId } from "../game/animals";
@@ -14,6 +14,10 @@ interface Props {
   eyeStyle: EyeStyleId;
   expression: ExpressionId;
   mode: "brawl" | "bomb" | "teams";
+  arena: "plane" | "ship";
+  onArena: (arena: "plane" | "ship") => void;
+  shipScale: number;
+  onShipScale: (scale: number) => void;
   bots: number;
   twoPlayer: boolean;
   /** False while a sheet/modal is open: pauses the 3D preview and the hotkeys. */
@@ -38,7 +42,7 @@ const ITEMS: { id: MenuSheet | "play"; label: string; icon: typeof Cat; big?: bo
 
 /** Main menu in the orange "matchmaking" style: big left list, cat stage, side cards. */
 export default function MenuScreen(props: Props) {
-  const { selected, accessory, eyeStyle, expression, mode, bots, twoPlayer, active, onPlay, onOpenSheet, onMode, onBots, onTwoPlayer, onSelectAnimal, onBundledGame } = props;
+  const { selected, accessory, eyeStyle, expression, mode, arena, onArena, shipScale, onShipScale, bots, twoPlayer, active, onPlay, onOpenSheet, onMode, onBots, onTwoPlayer, onSelectAnimal, onBundledGame } = props;
   const [cursor, setCursor] = useState(0);
   const sel = animalById(selected);
 
@@ -160,6 +164,30 @@ export default function MenuScreen(props: Props) {
             <UsersRound size={19} />
             <span><b>Tim 5v5</b><small>MERAH 🆚 BIRU, tanpa tembak kawan</small></span>
           </button>
+        </div>
+
+        <div className="mm-card">
+          <div className="mm-card-title"><span>ARENA</span><Ship size={16} /></div>
+          <button type="button" className={`mm-mode ${arena === "plane" ? "is-on" : ""}`} onClick={(e) => { uiBtn(e); onArena("plane"); }}>
+            <Plane size={19} />
+            <span><b>Pesawat</b><small>Arena klasik di angkasa</small></span>
+          </button>
+          <button type="button" className={`mm-mode ${arena === "ship" ? "is-on" : ""}`} onClick={(e) => { uiBtn(e); onArena("ship"); }}>
+            <Ship size={19} />
+            <span><b>Kapal Pesiar</b><small>Bergebuk di dek kapal, dijatuhkan ke laut!</small></span>
+          </button>
+          {arena === "ship" && (
+            <div className="mm-row" style={{ marginTop: 6 }}>
+              <span>🔍 Ukuran</span>
+              <span className="mm-stepper">
+                {[[0.4, "1x"], [1.6, "4x"], [2.8, "7x"]].map(([v, label]: [number, string]) => (
+                  <button key={v} type="button" aria-label={`Ukuran kapal ${label}`} className={shipScale === v ? "is-on" : ""} onClick={(e) => { uiBtn(e); onShipScale(v); }} style={shipScale === v ? { background: "#ffd76a", fontWeight: 900 } : undefined}>
+                    {label}
+                  </button>
+                ))}
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="mm-card">
