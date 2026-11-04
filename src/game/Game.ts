@@ -2,6 +2,8 @@ import * as CANNON from "cannon-es";
 import * as THREE from "three";
 import { ACCESSORIES, ANIMALS, BOT_NAMES, animalById, type AccessoryId, type AnimalDef, type AnimalId } from "./animals";
 import { Arena } from "./Arena";
+import { createRenderer } from "../components/webgl";
+import { ShipArena, type ArenaLike } from "./ShipArena";
 import { Seagull } from "./Seagull";
 import { BLAST_R, BombManager, type Bomb } from "./Bombs";
 import { Character, GRAVITY, bodyOwner, type Bat, type CharacterHooks } from "./Character";
@@ -31,6 +33,8 @@ export interface GameOptions {
   mode: "brawl" | "bomb" | "teams";
   camMode: "stumble" | "gang";
   camZoom: number; // 0.7 dekat · 1 normal · 1.35 jauh
+  arena?: "plane" | "ship";
+  shipScale?: number; // skala kapal pesiar (0.4 = normal, 1.6 = 4x, 2.8 = 7x)
   onHud: (s: HudState) => void;
   preparedRoster?: RosterEntry[];
 }
@@ -221,7 +225,7 @@ export class Game {
   camera: THREE.PerspectiveCamera;
   world: CANNON.World;
   groundMat = new CANNON.Material("ground");
-  arena: Arena | null = null;
+  arena: ArenaLike | null = null;
   chars: Character[] = [];
   brains = new Map<Character, Brain>();
   teamWins: [number, number] = [0, 0];
@@ -241,6 +245,7 @@ export class Game {
   camYaw = Math.PI; // current camera forward yaw (π = fixed south view)
   camMode: "stumble" | "gang" = "gang";
   camZoom = 1;
+  arenaZoom = 1; // kamera menjauh otomatis saat kapal dibesarkan (1x..7x)
   setCam(mode: "stumble" | "gang", zoom: number) {
     this.camMode = mode;
     this.camZoom = zoom;
@@ -273,7 +278,9 @@ export class Game {
     this.camMode = opts.camMode;
     this.camZoom = opts.camZoom;
 
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+    const renderer = createRenderer(container, { antialias: true, powerPreference: "high-performance" });
+    if (!renderer) throw new Error("WebGL tidak tersedia di perangkat ini");
+    this.renderer = renderer;
     const smallScreen = Math.min(window.innerWidth, window.innerHeight) < 700;
     this.qBasePR = Math.min(window.devicePixelRatio || 1, smallScreen ? 1.5 : 2);
     this.renderer.setPixelRatio(this.qBasePR);
@@ -283,7 +290,6 @@ export class Game {
     this.renderer.toneMapping = THREE.NeutralToneMapping;
     this.renderer.toneMappingExposure = 1.12;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-    container.appendChild(this.renderer.domElement);
     this.renderer.domElement.style.display = "block";
 
     this.camera = new THREE.PerspectiveCamera(48, 1, 0.4, 300);
@@ -460,7 +466,16 @@ export class Game {
     Character.loose = [];
     Character.thrownProps = [];
 
-    this.arena = new Arena(this.world, this.scene, this.groundMat);
+    this.arena = this.opts.arena === "ship"
+      ? new ShipArena(this.world, this.scene, this.groundMat, this.opts.shipScale ?? 0.4)
+      : new Arena(this.world, this.scene, this.groundMat);
+    if (this.opts.arena === "ship") {
+      // kapal bisa dibesarkan 4-7x → kamera & fog menjangkau seluruh kapal
+      this.camera.far = 1500;
+      this.scene.fog = new THREE.Fog(0xb8e6ff, 120, 900);
+      this.arenaZoom = Math.min(4, Math.max(1, (this.opts.shipScale ?? 0.4) / 0.4));
+      this.camPos.set(0, 14 * this.arenaZoom, 16 * this.arenaZoom);
+    }
     this.seagull = new Seagull(this.scene, z => this.arena!.surfaceHeight(z), (_cat, x, y, z) => {
       this.burst(x, y, z, 10, 0xf6f5ed, 0.13, 0.8, 0.8);
       this.burst(x, y, z, 6, 0xffdd87, 0.1, 0.65, 0.8);
@@ -1190,8 +1205,20 @@ export class Game {
     this.last = now;
     this.autoQuality(rawDt);
     const dt = Math.min(0.05, Math.max(0, rawDt));
-    this.update(dt);
-    this.renderer.render(this.scene, this.camera);
+    try {
+      this.update(dt);
+      this.renderer.render(this.scene, this.camera);
+    } catch (err) {
+      // jangan biarkan satu frame error mengosongkan seluruh layar
+      console.error("[meow-brawl] frame error", err);
+      if (!(this as unknown as { _errShown?: boolean })._errShown) {
+        (this as unknown as { _errShown?: boolean })._errShown = true;
+        const d = document.createElement("div");
+        d.style.cssText = "position:fixed;top:0;left:0;right:0;background:#dc2626;color:#fff;z-index:99999;padding:4px 8px;font:12px monospace;white-space:pre-wrap";
+        d.textContent = "FRAME ERR: " + (err as Error).message;
+        document.body.appendChild(d);
+      }
+    }
   };
 
   update(dt: number) {
@@ -1485,7 +1512,7 @@ export class Game {
 
   updateCamera(dt: number) {
     const portrait = this.camera.aspect < 1;
-    const zoom = this.camZoom;
+    const zoom = this.camZoom * this.arenaZoom;
     // smooth FOV per mode
     const targetFov = this.camMode === "stumble" ? (portrait ? 66 : 58) : portrait ? 58 : 44;
     if (Math.abs(this.camera.fov - targetFov) > 0.05) {

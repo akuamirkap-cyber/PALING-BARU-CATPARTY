@@ -863,7 +863,7 @@ function buildPanelGeometry(t: Tile, tiles: Tile[]) {
 }
 
 /** Grey non-stick frying pan, with a plain cooking surface and no food. */
-function makePanMesh() {
+export function makePanMesh() {
   const g = new THREE.Group();
   const shell = new THREE.MeshStandardMaterial({ color: 0x626a72, roughness: 0.46, metalness: 0.32 });
   const nonstick = new THREE.MeshStandardMaterial({ color: 0x343a40, roughness: 0.68, metalness: 0.1 });
@@ -903,7 +903,7 @@ function makePanMesh() {
   return g;
 }
 
-function makeBatMesh() {
+export function makeBatMesh() {
   const g = new THREE.Group();
   const prof = [
     [0, -0.5],
@@ -982,7 +982,7 @@ function makeBatMesh() {
   return g;
 }
 
-function stripeTexture() {
+export function stripeTexture() {
   const c = document.createElement("canvas");
   c.width = 64;
   c.height = 16;
@@ -997,7 +997,7 @@ function stripeTexture() {
   return t;
 }
 
-function beachBallTexture() {
+export function beachBallTexture() {
   const c = document.createElement("canvas");
   c.width = 256;
   c.height = 128;
